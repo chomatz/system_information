@@ -1,0 +1,22 @@
+---
+
+- name: install fastfetch
+  ansible.builtin.package:
+    name: fastfetch
+    state: present
+
+- name: locate fastfetch binary
+  ansible.builtin.command:
+    cmd: which fastfetch
+  changed_when: false
+  register: fastfetch_binary
+
+- name: run fastfetch on user login
+  ansible.builtin.template:
+    src: fastfetch.sh.j2
+    dest: /etc/profile.d/fastfetch.sh
+    owner: root
+    group: root
+    mode: "0644"
+
+...
