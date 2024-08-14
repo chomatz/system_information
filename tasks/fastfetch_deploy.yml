@@ -1,22 +1,47 @@
 ---
 
-- name: install fastfetch
-  ansible.builtin.package:
-    name: fastfetch
-    state: present
+- name: ensure tasks run only on selected os releases
+  block:
 
-- name: locate fastfetch binary
-  ansible.builtin.command:
-    cmd: which fastfetch
-  changed_when: false
-  register: fastfetch_binary
+    - name: ensure tasks run only on selected os releases
+      block:
 
-- name: run fastfetch on user login
-  ansible.builtin.template:
-    src: fastfetch.sh.j2
-    dest: /etc/profile.d/fastfetch.sh
-    owner: root
-    group: root
-    mode: "0644"
+        - name: enable CodeReady Linux Builder repository
+          ansible.builtin.command:
+            cmd: dnf config-manager --set-enabled crb
+
+        - name: enable epel repositories
+          ansible.builtin.package:
+            name: "{{ item }}"
+            state: present
+          loop:
+            - epel-release
+            - epel-next-release
+
+      when: ansible_distribution == "Rocky"
+
+    - name: install fastfetch
+      ansible.builtin.package:
+        name: fastfetch
+        state: present
+
+    - name: locate fastfetch binary
+      ansible.builtin.command:
+        cmd: which fastfetch
+      changed_when: false
+      register: fastfetch_binary
+
+    - name: run fastfetch on user login
+      ansible.builtin.template:
+        src: fastfetch.sh.j2
+        dest: /etc/profile.d/fastfetch.sh
+        owner: root
+        group: root
+        mode: "0644"
+
+  when: >
+    ansible_distribution == "Archlinux" or
+    ansible_distribution == "Fedora" or
+    ansible_distribution == "Rocky"
 
 ...
