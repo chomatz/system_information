@@ -42,6 +42,7 @@
   when: >
     ansible_distribution == "Archlinux" or
     ansible_distribution == "Fedora" or
+    ansible_distribution == "RedHat" or
     ansible_distribution == "Rocky"
 
 ...
