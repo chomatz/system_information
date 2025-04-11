@@ -1,5 +1,5 @@
 if [ $UID -ge 1000 ]; then
 	echo
-	{{ fastfetch_binary.stdout }}
+	{{ fastfetch_binary.stdout }} --processing-timeout {{ default_timeout }}
 	echo
 fi

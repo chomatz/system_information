@@ -1,0 +1,6 @@
+---
+
+# timeout in ms
+default_timeout: 10000
+
+...
