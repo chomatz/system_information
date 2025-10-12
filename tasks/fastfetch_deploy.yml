@@ -24,10 +24,11 @@
       ansible.builtin.package:
         name: fastfetch
         state: present
+      when: ansible_distribution != "Bazzite"
 
     - name: locate fastfetch binary
       ansible.builtin.command:
-        cmd: which fastfetch
+        cmd: which fastfetch --skip-alias
       changed_when: false
       register: fastfetch_binary
 
@@ -41,6 +42,7 @@
 
   when: >
     ansible_distribution == "Archlinux" or
+    ansible_distribution == "Bazzite" or
     ansible_distribution == "Fedora" or
     ansible_distribution == "RedHat" or
     ansible_distribution == "Rocky"

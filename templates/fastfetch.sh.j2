@@ -1,5 +1,9 @@
 if [ $UID -ge 1000 ]; then
 	echo
+{% if ansible_distribution != "Bazzite" %}
 	{{ fastfetch_binary.stdout }} --processing-timeout {{ default_timeout }}
+{% elif ansible_distribution == "Bazzite" %}
+	{{ fastfetch_binary.stdout }} --processing-timeout {{ default_timeout }} --color $(/usr/libexec/bazzite-bling-fastfetch) -c /usr/share/ublue-os/bazzite/fastfetch.jsonc
+{% endif %}
 	echo
 fi
