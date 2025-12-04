@@ -12,11 +12,20 @@
 
         - name: enable epel repositories
           ansible.builtin.package:
-            name: "{{ item }}"
+            name:
+              - epel-release
+              - epel-next-release
             state: present
-          loop:
-            - epel-release
-            - epel-next-release
+          register: epel_repos
+          ignore_errors: true
+          failed_when:
+            - epel_repos is failed
+            - "'Failed to install some of the specified packages' not in epel_repos.msg"
+
+        - name: display repo provisioning result
+          ansible.builtin.debug:
+            var: epel_repos
+            verbosity: 1
 
       when: ansible_distribution == "Rocky"
 
